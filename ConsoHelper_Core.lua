@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.0.0"
+local ADDON_VERSION = "1.1.0"
 
 -- ============================================================================
 -- SETTINGS
@@ -16,6 +16,7 @@ local function InitDefaults()
   S.version = ADDON_VERSION
   if not S.enabledBuffs then S.enabledBuffs = {} end
   if not S.buffTracker then S.buffTracker = {} end
+  if not S.autoApply then S.autoApply = {} end
   if not S.settings then S.settings = {} end
 
   local defaults = {
@@ -63,6 +64,19 @@ function CH.SetEnabled(entry, value)
     CH.enabledSet[key] = true
   else
     CH.enabledSet[key] = nil
+  end
+end
+
+function CH.IsAutoApply(entry)
+  return ConsoHelper_Settings.autoApply[CH.UniqueKey(entry)] == true
+end
+
+function CH.SetAutoApply(entry, value)
+  local key = CH.UniqueKey(entry)
+  if value then
+    ConsoHelper_Settings.autoApply[key] = true
+  else
+    ConsoHelper_Settings.autoApply[key] = nil
   end
 end
 
