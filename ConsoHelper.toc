@@ -1,0 +1,12 @@
+## Interface: 11200
+## Author: You
+## Title: Conso Helper
+## Notes: Compact buff, consumable and weapon enchant tracker for OctoWoW/Turtle WoW 1.12
+## Version: 1.0.0
+## SavedVariablesPerCharacter: ConsoHelper_Settings
+## X-Category: Interface Enhancements
+
+ConsoHelper_Templates.xml
+ConsoHelper_Data.lua
+ConsoHelper_Core.lua
+ConsoHelper_UI.lua
