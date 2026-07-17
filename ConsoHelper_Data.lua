@@ -101,9 +101,9 @@ ConsoHelper_Data.buffs = {
   { cat = "special", kind = "item", name = "Gift of Arthas",             itemID = 9088,  duration = 1800, buffIcon = "Interface\\Icons\\Spell_Shadow_FingerOfDeath" },
   { cat = "special", kind = "item", name = "Winterfall Firewater",       itemID = 12820, duration = 1200 },
   { cat = "special", kind = "item", name = "Spirit of Zanza",            itemID = 20079, duration = 7200 },
-  { cat = "special", kind = "item", name = "Ground Scorpok Assay",       itemID = 8412,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_ForceOfNature" },
-  { cat = "special", kind = "item", name = "R.O.I.D.S.",                 itemID = 8410,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Strength" },
-  { cat = "special", kind = "item", name = "Cerebral Cortex Compound",   itemID = 8423,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Purge" },
+  { cat = "special", kind = "item", name = "Ground Scorpok Assay",       itemID = 8412,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_ForceOfNature", buffName = "Strike of the Scorpok" },
+  { cat = "special", kind = "item", name = "R.O.I.D.S.",                 itemID = 8410,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Strength", buffName = "Rage of Ages" },
+  { cat = "special", kind = "item", name = "Cerebral Cortex Compound",   itemID = 8423,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Purge", buffName = "Infallible Mind" },
   { cat = "special", kind = "item", name = "Dreamtonic",                 itemID = 61423, duration = 1200, buffIcon = "Interface\\Icons\\INV_Potion_30" },
 
   -- ===================== JUJU & TRIBAL =====================

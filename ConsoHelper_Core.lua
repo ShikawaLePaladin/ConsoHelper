@@ -262,14 +262,30 @@ end
 
 -- Texture path casing returned by UnitBuff doesn't always match GetItemInfo's casing
 -- for the same file, so everything is compared lower-cased.
+-- Buff NAMES are also collected via a hidden scanning tooltip (SetUnitBuff), because
+-- for several consumables the aura texture differs per server while the aura name is
+-- stable (e.g. Cerebral Cortex Compound -> "Infallible Mind").
 local activeAuraTextures = {}
+local activeAuraNames = {}
+
+local scanTip = CreateFrame("GameTooltip", "ConsoHelperScanTooltip", nil, "GameTooltipTemplate")
+scanTip:SetOwner(UIParent, "ANCHOR_NONE")
 
 local function RefreshActiveAuras()
   activeAuraTextures = {}
+  activeAuraNames = {}
   for i = 1, 32 do
     local texture = UnitBuff("player", i)
     if not texture then break end
     activeAuraTextures[string.lower(texture)] = true
+
+    scanTip:ClearLines()
+    scanTip:SetUnitBuff("player", i)
+    local nameLine = ConsoHelperScanTooltipTextLeft1
+    local name = nameLine and nameLine:GetText()
+    if name then
+      activeAuraNames[string.lower(name)] = true
+    end
   end
 end
 
@@ -277,6 +293,8 @@ local function AuraTextureMatches(entry, resolvedIcon)
   if activeAuraTextures[string.lower(resolvedIcon)] then return true end
   if entry.buffIcon and activeAuraTextures[string.lower(entry.buffIcon)] then return true end
   if entry.raidbuffIcon and activeAuraTextures[string.lower(entry.raidbuffIcon)] then return true end
+  if activeAuraNames[string.lower(entry.name)] then return true end
+  if entry.buffName and activeAuraNames[string.lower(entry.buffName)] then return true end
   return false
 end
 
