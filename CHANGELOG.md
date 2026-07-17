@@ -7,7 +7,6 @@
 - Added a real, currently-obtainable "Wizard Oil" (was previously tracking non-existent Brilliant Mana/Wizard Oil); corrected "Blessed Wizard Oil"'s item ID (it was mislabeled as "Blessed Weapon Coating").
 - Corrected 5 further item IDs (Greater Frost Protection Potion, Blessed Sunfruit, Blessed Sunfruit Juice, Buttermilk Delight, Kreeg's Stout Beatdown) after cross-checking against a live server item scan.
 - Added expiry warnings: a one-time sound + chat alert at 5 minutes remaining, plus the existing dim/red state in the final 30 seconds.
-- Added opt-in, per-item auto-reapply (right-click an icon to toggle). Never triggers while in combat, regardless of setting.
 - Added a search box to the buff selection window for fast filtering.
 - Added independent display toggles for background, title text and timer text.
 

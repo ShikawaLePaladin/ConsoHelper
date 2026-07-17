@@ -25,30 +25,8 @@ local function CreateGridIcon(parent, sizePx)
   local btn = CreateFrame("Button", nil, parent)
   btn:SetWidth(sizePx)
   btn:SetHeight(sizePx)
-  btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   btn:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
   return btn
-end
-
-local function AddAutoBadge(btn, entry)
-  btn.autoBadge = btn:CreateTexture(nil, "OVERLAY")
-  btn.autoBadge:SetTexture("Interface\\Icons\\Spell_Nature_Lightning")
-  btn.autoBadge:SetWidth(12)
-  btn.autoBadge:SetHeight(12)
-  btn.autoBadge:SetPoint("TOPRIGHT", btn, "TOPRIGHT", 2, 2)
-  if CH.IsAutoApply(entry) then btn.autoBadge:Show() else btn.autoBadge:Hide() end
-end
-
-local function ToggleAutoApply(btn)
-  local newVal = not CH.IsAutoApply(btn.entry)
-  CH.SetAutoApply(btn.entry, newVal)
-  if newVal then
-    btn.autoBadge:Show()
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFConso Helper:|r Auto-reapply ENABLED for " .. btn.entry.name .. " (only triggers out of combat).")
-  else
-    btn.autoBadge:Hide()
-    DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFConso Helper:|r Auto-reapply disabled for " .. btn.entry.name .. ".")
-  end
 end
 
 local function BuildEntryTooltip(entry)
@@ -65,13 +43,6 @@ local function BuildEntryTooltip(entry)
   end
   if entry.duration and entry.duration > 0 then
     GameTooltip:AddLine("Duration: " .. CH.FormatTime(entry.duration), 0.7, 0.7, 0.7, 1)
-  end
-  if entry.kind == "item" or entry.kind == "enchant" then
-    if CH.IsAutoApply(entry) then
-      GameTooltip:AddLine("Auto-reapply: |cff55ff55ON|r (right-click to disable)", 0.7, 0.7, 0.7, 1)
-    else
-      GameTooltip:AddLine("Auto-reapply: |cffff5555OFF|r (right-click to enable, out of combat only)", 0.7, 0.7, 0.7, 1)
-    end
   end
   GameTooltip:Show()
 end
@@ -148,10 +119,6 @@ local function CreateStatusIcon(entry)
     btn.slotText:SetText(entry.slot == "mainhand" and "MH" or "OH")
   end
 
-  if entry.kind ~= "spell" then
-    AddAutoBadge(btn, entry)
-  end
-
   btn:SetScript("OnEnter", function()
     if not ConsoHelper_Settings.settings.showTooltips then return end
     GameTooltip:SetOwner(btn, "ANCHOR_TOP")
@@ -163,9 +130,7 @@ local function CreateStatusIcon(entry)
     UI.OnHoverLeave()
   end)
   btn:SetScript("OnClick", function()
-    if arg1 == "RightButton" then
-      if btn.entry.kind ~= "spell" then ToggleAutoApply(btn) end
-    elseif btn.entry.kind == "enchant" then
+    if btn.entry.kind == "enchant" then
       CH.ApplyEnchant(btn.entry)
     elseif btn.entry.kind == "item" then
       CH.UseItem(btn.entry)
@@ -193,7 +158,6 @@ end
 
 local EXPIRING_SOON_SECONDS = 30
 local WARNING_SECONDS = 300
-local AUTO_RETRY_COOLDOWN = 5
 
 function UI.RefreshIcons()
   for _, btn in ipairs(statusIcons) do
@@ -202,24 +166,6 @@ function UI.RefreshIcons()
   if selectionFrame and selectionFrame:IsShown() then
     UI.RefreshSelectionGrid()
   end
-end
-
-local function TryAutoApply(btn)
-  if not CH.IsAutoApply(btn.entry) then return end
-  if ConsoHelper_Settings.settings.inCombat then return end
-
-  local now = GetTime()
-  if btn.lastAutoTry and (now - btn.lastAutoTry) < AUTO_RETRY_COOLDOWN then return end
-
-  if CH.GetBagCount(btn.entry) <= 0 then return end
-
-  btn.lastAutoTry = now
-  if btn.entry.kind == "enchant" then
-    CH.ApplyEnchant(btn.entry)
-  else
-    CH.UseItem(btn.entry)
-  end
-  DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFConso Helper:|r Auto-reapplied " .. btn.entry.name .. ".")
 end
 
 function UI.UpdateStatus()
@@ -256,9 +202,6 @@ function UI.UpdateStatus()
       tex:SetVertexColor(1, 0.2, 0.2, 1)
       btn.glow:Hide()
       btn.warnedTier = nil
-      if btn.entry.kind ~= "spell" then
-        TryAutoApply(btn)
-      end
     end
 
     if S.showTimer then
@@ -413,15 +356,7 @@ local function CreateSelectionIcon(parent, entry)
   local key = CH.UniqueKey(entry)
   if tempEnabled[key] == true then check:Show(); glow:Show() else check:Hide(); glow:Hide() end
 
-  if entry.kind ~= "spell" then
-    AddAutoBadge(btn, entry)
-  end
-
   btn:SetScript("OnClick", function()
-    if arg1 == "RightButton" then
-      if btn.entry.kind ~= "spell" then ToggleAutoApply(btn) end
-      return
-    end
     local k = CH.UniqueKey(btn.entry)
     tempEnabled[k] = not tempEnabled[k] or nil
     if tempEnabled[k] == true then

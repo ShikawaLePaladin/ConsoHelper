@@ -13,7 +13,6 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 - **Compact selection window** — a searchable icon grid (with live text filtering) instead of a giant single-column checklist, grouped by category.
 - **Shopping list** — see at a glance which tracked consumables you're low on, with a configurable restock threshold.
 - **Expiry warnings** — a sound and chat alert fire once when a tracked buff drops under 5 minutes remaining; the icon then dims and the timer turns red in its final 30 seconds.
-- **Optional auto-reapply (opt-in, per item)** — right-click any icon to mark it for auto-reapply: when that buff/enchant expires, Conso Helper uses it from your bag for you. Off by default, and it **never triggers while you're in combat**, even if the setting is on — you always stay in control.
 - **Minimap button** — left-click to open buff selection, right-click for settings, draggable around the minimap.
 - **Combat-aware** — optionally pause updates or hide the frame entirely while in combat.
 
@@ -34,7 +33,7 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 
 The minimap button gives the same access: left-click opens selection, right-click opens settings.
 
-On any tracked icon (status frame or selection window): **left-click** uses the item / applies the enchant, **right-click** toggles auto-reapply for that item (shown with a small lightning-bolt badge).
+Click any tracked icon on the status frame to use the item or apply the weapon enchant.
 
 ## Settings
 
