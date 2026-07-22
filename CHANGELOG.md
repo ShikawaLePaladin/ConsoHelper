@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.2
+
+- **Every item ID in the database was cross-checked against OctoWoW's own public database** (octowow.st/db) - the authoritative source for this server. 39 item IDs that had been added from a third-party generic classic item list turned out to be wrong (weapon oils/poisons, protection potions, several elixirs, jujus, a few foods) and are now corrected to the IDs OctoWoW actually uses. A few of these were regressions introduced in 1.1.1 that reverted correct original values - those are back to the correct IDs.
+- Fixed Ground Scorpok Assay's buff name (it's "Salt of the Scorpok", not "Strike of the Scorpok").
+- Renamed two elixirs to match their real in-game names: "Elixir of Greater Frost Power" and "Elixir of Greater Arcane Power".
+- Fixed a food item's real name: "Crunchy Sandwept Carrots" (not "Sandswept").
+
+## 1.1.1
+
+- Buffs are now also matched by **name** (via a hidden scanning tooltip), not just icon texture, since some auras on this server use a different icon than their item. Fixes remaining detection gaps such as Cerebral Cortex Compound ("Infallible Mind").
+- Added Dreamshard Elixir, which had never actually been in the tracked database (this, not a detection bug, was why it never worked).
+- Added `/conso debug`, which prints all currently active buff names/textures plus the live detection status of every tracked item - for diagnosing any future mismatches without guesswork.
+- Removed the auto-reapply feature introduced (and reverted) between 1.1.0 patches: programmatic item use triggered from a timer was silently ignored server-side, so it never actually worked. Manual click-to-use/apply is unaffected.
+
 ## 1.1.0
 
 - Fixed active-buff detection for consumables whose in-game buff icon differs from their item icon (R.O.I.D.S., Ground Scorpok Assay, Cerebral Cortex Compound, Dreamtonic, Gift of Arthas, most food, Medivh's Merlot, Potion of Quickness, several elixirs, and more).

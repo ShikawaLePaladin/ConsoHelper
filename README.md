@@ -30,6 +30,7 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 | `/conso config` | Open the settings panel |
 | `/conso shop` | Open the shopping list |
 | `/conso reset` | Reset all settings and selections to default |
+| `/conso debug` | Print currently active buff names/textures and the detection status of every tracked item, for diagnosing detection issues |
 
 The minimap button gives the same access: left-click opens selection, right-click opens settings.
 
@@ -43,7 +44,7 @@ Click any tracked icon on the status frame to use the item or apply the weapon e
 
 ## Credits
 
-Conso Helper was built from scratch, taking inspiration from **[Akkio's Consume Helper](https://github.com/prodigystudios/Akkio_Consume_Helper)** (MIT licensed) — particularly its weapon-enchant tracking concept. The buff/consumable database and UI were rewritten to prioritize a compact interface and to cross-check item data against a live server scan.
+Conso Helper was built from scratch, taking inspiration from **[Akkio's Consume Helper](https://github.com/prodigystudios/Akkio_Consume_Helper)** (MIT licensed) — particularly its weapon-enchant tracking concept. The buff/consumable database and UI were rewritten to prioritize a compact interface, and every item ID was cross-checked against **[OctoWoW's public database](https://octowow.st/db/)**, the authoritative source for item data on this server.
 
 ## License
 

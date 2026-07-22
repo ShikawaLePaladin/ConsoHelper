@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.1.0"
+local ADDON_VERSION = "1.1.2"
 
 -- ============================================================================
 -- SETTINGS
@@ -271,9 +271,18 @@ local activeAuraNames = {}
 local scanTip = CreateFrame("GameTooltip", "ConsoHelperScanTooltip", nil, "GameTooltipTemplate")
 scanTip:SetOwner(UIParent, "ANCHOR_NONE")
 
+local function Trim(s)
+  if not s then return s end
+  return string.gsub(s, "^%s*(.-)%s*$", "%1")
+end
+
+CH.lastAuraScan = {}
+
 local function RefreshActiveAuras()
   activeAuraTextures = {}
   activeAuraNames = {}
+  CH.lastAuraScan = {}
+
   for i = 1, 32 do
     local texture = UnitBuff("player", i)
     if not texture then break end
@@ -282,10 +291,12 @@ local function RefreshActiveAuras()
     scanTip:ClearLines()
     scanTip:SetUnitBuff("player", i)
     local nameLine = ConsoHelperScanTooltipTextLeft1
-    local name = nameLine and nameLine:GetText()
-    if name then
+    local name = nameLine and Trim(nameLine:GetText())
+    if name and name ~= "" then
       activeAuraNames[string.lower(name)] = true
     end
+
+    table.insert(CH.lastAuraScan, { texture = texture, name = name })
   end
 end
 
@@ -376,6 +387,27 @@ end)
 -- SLASH COMMANDS
 -- ============================================================================
 
+local function PrintDebug()
+  DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFConso Helper debug - active auras:|r")
+  if table.getn(CH.lastAuraScan) == 0 then
+    DEFAULT_CHAT_FRAME:AddMessage("  (none)")
+  end
+  for i, aura in ipairs(CH.lastAuraScan) do
+    DEFAULT_CHAT_FRAME:AddMessage("  " .. i .. ". |cffFFFF00" .. (aura.name or "?") .. "|r - " .. tostring(aura.texture))
+  end
+
+  DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFTracked consumables/enchants:|r")
+  for _, entry in ipairs(ConsoHelper_Data.buffs) do
+    if entry.kind ~= "spell" and CH.IsEnabled(entry) then
+      local active = CH.GetBuffState(entry)
+      local color = active and "|cff55ff55" or "|cffff5555"
+      local icon = CH.ResolveIcon(entry)
+      local extra = entry.buffName and (" buffName=" .. entry.buffName) or ""
+      DEFAULT_CHAT_FRAME:AddMessage("  " .. color .. tostring(active) .. "|r " .. entry.name .. " (icon=" .. tostring(icon) .. extra .. ")")
+    end
+  end
+end
+
 SLASH_CONSOHELPER1 = "/conso"
 SLASH_CONSOHELPER2 = "/ch"
 SlashCmdList["CONSOHELPER"] = function(msg)
@@ -386,6 +418,8 @@ SlashCmdList["CONSOHELPER"] = function(msg)
     ConsoHelper_UI.ToggleShoppingList()
   elseif msg == "reset" then
     ConsoHelper_UI.ToggleResetConfirm()
+  elseif msg == "debug" then
+    PrintDebug()
   else
     ConsoHelper_UI.ToggleSelection()
   end
