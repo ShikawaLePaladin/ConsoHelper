@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.1.2"
+local ADDON_VERSION = "1.1.3"
 
 -- ============================================================================
 -- SETTINGS
@@ -103,6 +103,13 @@ CH.iconCache = {}
 CH.pendingIcons = {}
 local FALLBACK_ICON = "Interface\\Icons\\INV_Misc_QuestionMark"
 
+-- GetItemInfo alone doesn't reliably make the client request uncached item data from
+-- the server on this server - only actually rendering a tooltip for the item does
+-- (which is why hovering an icon "fixes" it). This hidden tooltip mimics a hover for
+-- every pending item so icons resolve on their own, without the player touching them.
+local primeTip = CreateFrame("GameTooltip", "ConsoHelperPrimeTooltip", nil, "GameTooltipTemplate")
+primeTip:SetOwner(UIParent, "ANCHOR_NONE")
+
 function CH.ResolveIcon(entry)
   if entry.kind == "spell" then
     return entry.icon
@@ -130,6 +137,8 @@ local function RetryPendingIcons()
       CH.iconCache[itemID] = texture
       CH.pendingIcons[itemID] = nil
       resolvedAny = true
+    else
+      primeTip:SetHyperlink("item:" .. itemID)
     end
   end
   if resolvedAny and ConsoHelper_UI and ConsoHelper_UI.RefreshIcons then

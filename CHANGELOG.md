@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- Fixed icons staying stuck on the "?" placeholder until the player manually hovered them. `GetItemInfo` alone doesn't reliably make this server send uncached item data - only rendering an actual tooltip does. A hidden tooltip now automatically "hovers" every pending item once a second in the background, so icons resolve on their own.
+
 ## 1.1.2
 
 - **Every item ID in the database was cross-checked against OctoWoW's own public database** (octowow.st/db) - the authoritative source for this server. 39 item IDs that had been added from a third-party generic classic item list turned out to be wrong (weapon oils/poisons, protection potions, several elixirs, jujus, a few foods) and are now corrected to the IDs OctoWoW actually uses. A few of these were regressions introduced in 1.1.1 that reverted correct original values - those are back to the correct IDs.
