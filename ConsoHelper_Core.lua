@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.1.3"
+local ADDON_VERSION = "1.2.0"
 
 -- ============================================================================
 -- SETTINGS
@@ -32,6 +32,7 @@ local function InitDefaults()
     showBackground = true,
     showTitle = true,
     showTimer = true,
+    warningMinutes = 5,
     minimapAngle = 225,
     minimapHidden = false,
     shoppingThreshold = 1,

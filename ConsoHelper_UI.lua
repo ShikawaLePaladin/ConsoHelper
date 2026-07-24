@@ -157,8 +157,6 @@ local function RebuildStatusFrame()
 end
 
 local EXPIRING_SOON_SECONDS = 30
-local WARNING_SECONDS = 300
-
 function UI.RefreshIcons()
   for _, btn in ipairs(statusIcons) do
     MakeIconTexture(btn, CH.ResolveIcon(btn.entry))
@@ -176,8 +174,9 @@ function UI.UpdateStatus()
   for _, btn in ipairs(statusIcons) do
     local active, remaining = CH.GetBuffState(btn.entry)
     local tex = btn.icon
+    local warningSeconds = (S.warningMinutes or 5) * 60
     local critical = active and remaining and remaining <= EXPIRING_SOON_SECONDS
-    local warning = active and remaining and remaining <= WARNING_SECONDS and not critical
+    local warning = active and remaining and remaining <= warningSeconds and not critical
 
     if active and not warning and not critical then
       tex:SetVertexColor(1, 1, 1, 1)
@@ -687,6 +686,11 @@ local function CreateSettingsFrame()
   _, ny = AddSliderRow(settingsFrame, "Icon spacing", leftX, leftY, 0, 20, 1,
     function() return S.iconSpacing end,
     function(v) S.iconSpacing = v; LayoutStatusFrame() end)
+  leftY = ny
+
+  _, ny = AddSliderRow(settingsFrame, "Expiry warning (min)", leftX, leftY, 1, 15, 1,
+    function() return S.warningMinutes end,
+    function(v) S.warningMinutes = v end)
   leftY = ny
 
   _, ny = AddCheckRow(settingsFrame, "Pause updates in combat", rightX, rightY,

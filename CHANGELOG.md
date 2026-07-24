@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+- The expiry warning threshold (sound + chat alert before a buff falls off) is now configurable in Settings ("Expiry warning (min)", 1-15 minutes, default 5) instead of a fixed 5 minutes.
+
 ## 1.1.3
 
 - Fixed icons staying stuck on the "?" placeholder until the player manually hovered them. `GetItemInfo` alone doesn't reliably make this server send uncached item data - only rendering an actual tooltip does. A hidden tooltip now automatically "hovers" every pending item once a second in the background, so icons resolve on their own.

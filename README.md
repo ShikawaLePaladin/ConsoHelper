@@ -38,7 +38,7 @@ Click any tracked icon on the status frame to use the item or apply the weapon e
 
 ## Settings
 
-- **Layout**: scale, update interval, icons per row, icon size, icon spacing.
+- **Layout**: scale, update interval, icons per row, icon size, icon spacing, expiry warning threshold (1-15 minutes).
 - **Display**: show/hide background, show/hide the "Conso Helper" title text, show/hide timer text, tooltips on/off, hover-to-show, lock frame (prevents dragging).
 - **Combat**: pause updates in combat, hide frame in combat.
 
