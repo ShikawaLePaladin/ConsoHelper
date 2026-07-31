@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Fixed a false-positive detection bug: Dreamshard Elixir and Greater Arcane Elixir shared the same buff icon in the database (inherited from the original addon data), so drinking one would also light up the other. Dreamshard Elixir is now matched only by its own icon and name.
+
 ## 1.2.0
 
 - The expiry warning threshold (sound + chat alert before a buff falls off) is now configurable in Settings ("Expiry warning (min)", 1-15 minutes, default 5) instead of a fixed 5 minutes.

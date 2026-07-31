@@ -76,7 +76,7 @@ ConsoHelper_Data.buffs = {
   { cat = "battle", kind = "item", name = "Elixir of Brute Force",          itemID = 13453, duration = 3600 },
   { cat = "battle", kind = "item", name = "Elixir of Greater Frost Power",  itemID = 55046, duration = 3600 },
   { cat = "battle", kind = "item", name = "Elixir of Greater Arcane Power", itemID = 55048, duration = 3600 },
-  { cat = "battle", kind = "item", name = "Dreamshard Elixir",              itemID = 61224, duration = 3600, buffIcon = "Interface\\Icons\\INV_Potion_25" },
+  { cat = "battle", kind = "item", name = "Dreamshard Elixir",              itemID = 61224, duration = 3600 },
 
   -- ===================== GUARDIAN ELIXIRS (defense) =====================
   { cat = "guardian", kind = "item", name = "Elixir of Superior Defense",   itemID = 13445, duration = 3600, buffIcon = "Interface\\Icons\\INV_Potion_86" },
