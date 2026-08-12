@@ -6,7 +6,7 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 
 ## Features
 
-- **Compact icon-grid buff tracker** — configurable scale, icons per row, icon spacing and update interval. Active buffs glow gently; buffs about to expire dim and switch to a red countdown; missing buffs turn red.
+- **Compact icon-grid buff tracker** — configurable scale, icons per row, icon spacing and update interval. Missing consumables glow red so they stand out as needing action; buffs about to expire dim and switch to a red countdown.
 - **~150 tracked buffs and consumables** across Class Buffs, Flasks, Battle Elixirs, Guardian Elixirs, Protection Potions, Special Potions, Juju & Tribal, Food & Drinks, Alcoholic Beverages, Combat Potions and Weapon Enchants — cross-checked against a live server item-database scan rather than hand-typed guesses.
 - **One-click weapon enchant application** — click a sharpening stone, oil or poison and it's applied straight to the correct weapon slot, no manual character-panel click required.
 - **Dynamic icon resolution** — item icons are fetched live via `GetItemInfo`, so they always match what the server actually has (no stale or hardcoded icon paths to maintain).

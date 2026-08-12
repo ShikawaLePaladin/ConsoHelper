@@ -100,7 +100,7 @@ local function CreateStatusIcon(entry)
   btn.glow = btn:CreateTexture(nil, "OVERLAY")
   btn.glow:SetTexture("Interface\\Buttons\\ButtonHilight-Square")
   btn.glow:SetBlendMode("ADD")
-  btn.glow:SetVertexColor(1, 0.82, 0.2, 1)
+  btn.glow:SetVertexColor(1, 0.2, 0.15, 1)
   btn.glow:SetPoint("CENTER", btn, "CENTER", 0, 0)
   btn.glow:SetWidth(ConsoHelper_Settings.settings.iconSize + 10)
   btn.glow:SetHeight(ConsoHelper_Settings.settings.iconSize + 10)
@@ -180,7 +180,7 @@ function UI.UpdateStatus()
 
     if active and not warning and not critical then
       tex:SetVertexColor(1, 1, 1, 1)
-      btn.glow:Show()
+      btn.glow:Hide()
       btn.timerText:SetTextColor(1, 1, 0.4, 1)
       btn.warnedTier = nil
     elseif warning then
@@ -199,7 +199,7 @@ function UI.UpdateStatus()
       btn.warnedTier = "critical"
     else
       tex:SetVertexColor(1, 0.2, 0.2, 1)
-      btn.glow:Hide()
+      btn.glow:Show()
       btn.warnedTier = nil
     end
 

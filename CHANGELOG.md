@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0
+
+- Added Sagefish Delight, Hearty Country Pumpkin, Tender Wolf Steak (food) and Lesser Mana Oil (weapon enchant), all verified against the official item database.
+- Inverted the glow effect: the icon now glows red when a consumable is **missing** (an actionable alert) instead of glowing gold when it's active. Expiring/critical states are unchanged.
+
 ## 1.2.1
 
 - Fixed a false-positive detection bug: Dreamshard Elixir and Greater Arcane Elixir shared the same buff icon in the database (inherited from the original addon data), so drinking one would also light up the other. Dreamshard Elixir is now matched only by its own icon and name.

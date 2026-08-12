@@ -139,6 +139,9 @@ ConsoHelper_Data.buffs = {
   { cat = "food", kind = "item", name = "Sweet Wildhammer Yam",            itemID = 42159, duration = 600 },
   { cat = "food", kind = "item", name = "Mealy Wildhammer Yam",            itemID = 42160, duration = 600 },
   { cat = "food", kind = "item", name = "Buttermilk Delight",              itemID = 22236, duration = 3600 },
+  { cat = "food", kind = "item", name = "Sagefish Delight",                itemID = 21217, duration = 900 },
+  { cat = "food", kind = "item", name = "Hearty Country Pumpkin",          itemID = 51713, duration = 900 },
+  { cat = "food", kind = "item", name = "Tender Wolf Steak",               itemID = 18045, duration = 900 },
 
   -- ===================== ALCOHOLIC BEVERAGES =====================
   { cat = "alcohol", kind = "item", name = "Rumsey Rum Black Label",  itemID = 21151, duration = 900 },
@@ -163,6 +166,7 @@ ConsoHelper_Data.buffs = {
   { cat = "enchant", kind = "enchant", name = "Elemental Sharpening Stone", itemID = 18262, slot = "offhand" },
   { cat = "enchant", kind = "enchant", name = "Consecrated Sharpening Stone", itemID = 23122, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Consecrated Sharpening Stone", itemID = 23122, slot = "offhand" },
+  { cat = "enchant", kind = "enchant", name = "Lesser Mana Oil", itemID = 20747, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Wizard Oil", itemID = 20750, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Blessed Wizard Oil", itemID = 23123, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Shadow Oil", itemID = 3824, slot = "mainhand" },
