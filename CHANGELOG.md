@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+
+- Buff and bag-count detection now reacts to `UNIT_AURA` and `BAG_UPDATE` events instead of only polling on the update interval. Using a consumable (or picking up/vendoring one) now reflects on the icon almost instantly instead of taking up to a couple of seconds.
+- Fixed the countdown timer not resetting when re-consuming an item before its previous buff expired. The timer only ever started once and never refreshed, so retaking a consumable early kept counting down from the original application instead of the new one. It now resets whenever a tracked item's bag count drops (i.e., it was just used).
+
 ## 1.3.0
 
 - Added Sagefish Delight, Hearty Country Pumpkin, Tender Wolf Steak (food) and Lesser Mana Oil (weapon enchant), all verified against the official item database.

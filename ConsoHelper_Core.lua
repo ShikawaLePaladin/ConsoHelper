@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.3.0"
+local ADDON_VERSION = "1.3.1"
 
 -- ============================================================================
 -- SETTINGS
@@ -376,6 +376,41 @@ tickerFrame:SetScript("OnUpdate", function()
     if ConsoHelper_UI and ConsoHelper_UI.UpdateStatus then
       ConsoHelper_UI.UpdateStatus()
     end
+  end
+end)
+
+-- ============================================================================
+-- EVENT-DRIVEN REFRESH (instant instead of waiting for the next poll tick)
+-- ============================================================================
+
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("BAG_UPDATE")
+eventFrame:RegisterEvent("UNIT_AURA")
+eventFrame:SetScript("OnEvent", function()
+  if not ConsoHelper_Settings or not ConsoHelper_Settings.buffTracker then return end
+
+  if event == "BAG_UPDATE" then
+    local before = CH.bagCache
+    CH.ScanBags(true)
+    -- A dropping stack count means the item was just consumed - even if the buff was
+    -- already active, this is a fresh application, so drop the old timer and let
+    -- GetBuffState start a new one from the current aura scan.
+    for _, e in ipairs(ConsoHelper_Data.buffs) do
+      if e.itemID and e.duration and e.duration > 0 then
+        local oldCount = before[e.itemID] or 0
+        local newCount = CH.bagCache[e.itemID] or 0
+        if newCount < oldCount then
+          ConsoHelper_Settings.buffTracker[CH.UniqueKey(e)] = nil
+        end
+      end
+    end
+  elseif event == "UNIT_AURA" and arg1 == "player" then
+    RefreshActiveAuras()
+  else
+    return
+  end
+  if ConsoHelper_UI and ConsoHelper_UI.UpdateStatus then
+    ConsoHelper_UI.UpdateStatus()
   end
 end)
 
