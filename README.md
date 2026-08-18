@@ -15,6 +15,8 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 - **Expiry warnings** — a sound and chat alert fire once when a tracked buff drops under 5 minutes remaining; the icon then dims and the timer turns red in its final 30 seconds.
 - **Minimap button** — left-click to open buff selection, right-click for settings, draggable around the minimap.
 - **Combat-aware** — optionally pause updates or hide the frame entirely while in combat.
+- **Raid-only mode** — optionally show the tracker only while you're in a raid group.
+- **Alert-only mode** — optionally hide healthy/active icons entirely and only show what's missing or about to expire, for a minimal always-on-screen alert view.
 
 ## Installation
 
@@ -39,7 +41,7 @@ Click any tracked icon on the status frame to use the item or apply the weapon e
 ## Settings
 
 - **Layout**: scale, update interval, icons per row, icon size, icon spacing, expiry warning threshold (1-15 minutes).
-- **Display**: show/hide background, show/hide the "Conso Helper" title text, show/hide timer text, tooltips on/off, hover-to-show, lock frame (prevents dragging).
+- **Display**: show/hide background, show/hide the "Conso Helper" title text, show/hide timer text, tooltips on/off, hover-to-show, lock frame (prevents dragging), show only in raid, show only when missing/low.
 - **Combat**: pause updates in combat, hide frame in combat.
 
 ## Credits

@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.3.1"
+local ADDON_VERSION = "1.4.0"
 
 -- ============================================================================
 -- SETTINGS
@@ -25,7 +25,7 @@ local function InitDefaults()
     iconSize = 26,
     iconSpacing = 4,
     pauseInCombat = true,
-    hideInCombat = false,
+    hideFrameInCombat = false,
     showTooltips = true,
     hoverToShow = false,
     lockFrame = false,
@@ -33,6 +33,8 @@ local function InitDefaults()
     showTitle = true,
     showTimer = true,
     warningMinutes = 5,
+    raidOnly = false,
+    showOnlyWhenLow = false,
     minimapAngle = 225,
     minimapHidden = false,
     shoppingThreshold = 1,
@@ -415,16 +417,22 @@ eventFrame:SetScript("OnEvent", function()
 end)
 
 -- ============================================================================
--- COMBAT STATE
+-- COMBAT / RAID STATE
 -- ============================================================================
 
 local combatFrame = CreateFrame("Frame")
 combatFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 combatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+combatFrame:RegisterEvent("RAID_ROSTER_UPDATE")
+combatFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 combatFrame:SetScript("OnEvent", function()
-  ConsoHelper_Settings.settings.inCombat = (event == "PLAYER_REGEN_DISABLED")
-  if ConsoHelper_UI and ConsoHelper_UI.OnCombatStateChanged then
-    ConsoHelper_UI.OnCombatStateChanged()
+  if event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_REGEN_ENABLED" then
+    ConsoHelper_Settings.settings.inCombat = (event == "PLAYER_REGEN_DISABLED")
+  else
+    ConsoHelper_Settings.settings.inRaid = GetNumRaidMembers() > 0
+  end
+  if ConsoHelper_UI and ConsoHelper_UI.UpdateFrameVisibility then
+    ConsoHelper_UI.UpdateFrameVisibility()
   end
 end)
 
@@ -481,6 +489,7 @@ initFrame:SetScript("OnEvent", function()
   CH.RebuildEnabledSet()
   CH.ScanBags(true)
   RefreshActiveAuras()
+  ConsoHelper_Settings.settings.inRaid = GetNumRaidMembers() > 0
   if ConsoHelper_UI and ConsoHelper_UI.OnReady then
     ConsoHelper_UI.OnReady()
   end

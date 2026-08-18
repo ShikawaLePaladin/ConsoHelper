@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+- Added "Show only in raid": the tracker only appears while you're in a raid group (settings checkbox).
+- Added "Show only when missing/low": the tracker hides icons for consumables that are active and healthy, showing only what's missing or approaching the expiry warning threshold - a compact alert-only view instead of the full status board. Icons reflow to fill the gap when others hide.
+- Fixed a stale default settings key (`hideInCombat` was never read; the actual setting is `hideFrameInCombat`) so the "Hide frame in combat" checkbox now has a proper default on first install.
+
 ## 1.3.1
 
 - Buff and bag-count detection now reacts to `UNIT_AURA` and `BAG_UPDATE` events instead of only polling on the update interval. Using a consumable (or picking up/vendoring one) now reflects on the icon almost instantly instead of taking up to a couple of seconds.

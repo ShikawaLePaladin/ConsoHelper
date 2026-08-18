@@ -67,7 +67,12 @@ end
 
 local function LayoutStatusFrame()
   local S = ConsoHelper_Settings.settings
-  local count = table.getn(statusIcons)
+  local visible = {}
+  for _, btn in ipairs(statusIcons) do
+    if btn:IsShown() then table.insert(visible, btn) end
+  end
+
+  local count = table.getn(visible)
   local perRow = math.max(1, S.iconsPerRow)
   local step = S.iconSize + S.iconSpacing
   local rows = math.ceil(count / perRow)
@@ -82,7 +87,7 @@ local function LayoutStatusFrame()
   statusFrame:SetHeight(height)
   statusFrame:SetScale(S.scale)
 
-  for i, btn in ipairs(statusIcons) do
+  for i, btn in ipairs(visible) do
     local idx = i - 1
     local col = math.mod(idx, perRow)
     local row = math.floor(idx / perRow)
@@ -213,6 +218,17 @@ function UI.UpdateStatus()
       local count = CH.GetBagCount(btn.entry)
       btn.countText:SetText(count > 0 and count or "")
     end
+
+    if S.showOnlyWhenLow then
+      local healthy = active and not warning and not critical
+      if healthy then btn:Hide() else btn:Show() end
+    elseif not btn:IsShown() then
+      btn:Show()
+    end
+  end
+
+  if S.showOnlyWhenLow then
+    LayoutStatusFrame()
   end
 end
 
@@ -227,10 +243,11 @@ glowTicker:SetScript("OnUpdate", function()
   end
 end)
 
-function UI.OnCombatStateChanged()
+function UI.UpdateFrameVisibility()
   if not statusFrame then return end
   local S = ConsoHelper_Settings.settings
-  if S.hideFrameInCombat and S.inCombat then
+  local shouldHide = (S.hideFrameInCombat and S.inCombat) or (S.raidOnly and not S.inRaid)
+  if shouldHide then
     statusFrame:Hide()
   elseif not S.hoverToShow then
     statusFrame:Show()
@@ -733,6 +750,22 @@ local function CreateSettingsFrame()
     function(v) S.showTimer = v end)
   rightY = ny
 
+  _, ny = AddCheckRow(settingsFrame, "Show only in raid", rightX, rightY,
+    function() return S.raidOnly end,
+    function(v) S.raidOnly = v; UI.UpdateFrameVisibility() end)
+  rightY = ny
+
+  _, ny = AddCheckRow(settingsFrame, "Show only when missing/low", rightX, rightY,
+    function() return S.showOnlyWhenLow end,
+    function(v)
+      S.showOnlyWhenLow = v
+      if not v then
+        for _, btn in ipairs(statusIcons) do btn:Show() end
+        LayoutStatusFrame()
+      end
+    end)
+  rightY = ny
+
   local selectBtn = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
   selectBtn:SetWidth(150)
   selectBtn:SetHeight(24)
@@ -1019,4 +1052,5 @@ function UI.OnReady()
   CreateStatusFrame()
   RebuildStatusFrame()
   CreateMinimapButton()
+  UI.UpdateFrameVisibility()
 end
