@@ -105,7 +105,7 @@ ConsoHelper_Data.buffs = {
   { cat = "special", kind = "item", name = "Ground Scorpok Assay",       itemID = 8412,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_ForceOfNature", buffName = "Salt of the Scorpok" },
   { cat = "special", kind = "item", name = "R.O.I.D.S.",                 itemID = 8410,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Strength", buffName = "Rage of Ages" },
   { cat = "special", kind = "item", name = "Cerebral Cortex Compound",   itemID = 8423,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Purge", buffName = "Infallible Mind" },
-  { cat = "special", kind = "item", name = "Dreamtonic",                 itemID = 61423, duration = 1200, buffIcon = "Interface\\Icons\\INV_Potion_30" },
+  { cat = "special", kind = "item", name = "Dreamtonic",                 itemID = 61423, duration = 1200, nameOnly = true },
 
   -- ===================== JUJU & TRIBAL =====================
   { cat = "juju", kind = "item", name = "Juju Might",  itemID = 12460, duration = 1800 },
@@ -168,6 +168,8 @@ ConsoHelper_Data.buffs = {
   { cat = "enchant", kind = "enchant", name = "Consecrated Sharpening Stone", itemID = 23122, slot = "offhand" },
   { cat = "enchant", kind = "enchant", name = "Lesser Mana Oil", itemID = 20747, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Wizard Oil", itemID = 20750, slot = "mainhand" },
+  { cat = "enchant", kind = "enchant", name = "Brilliant Mana Oil", itemID = 20748, slot = "mainhand" },
+  { cat = "enchant", kind = "enchant", name = "Brilliant Wizard Oil", itemID = 20749, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Blessed Wizard Oil", itemID = 23123, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Shadow Oil", itemID = 3824, slot = "mainhand" },
   { cat = "enchant", kind = "enchant", name = "Shadow Oil", itemID = 3824, slot = "offhand" },

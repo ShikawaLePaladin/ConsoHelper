@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.0
+
+- **Arrange your icons**: put each consumable exactly where you want it. Settings > "Arrange Icons..." (or `/conso order`) switches the tracker to arrange mode: drag an icon onto any position - a blue square shows where it will land and the others shift - then click **Done**. Clicking an icon does nothing in this mode, so you can't use an item by accident, and every icon is shown even in "only when missing" mode. The order is saved per character.
+- Newly enabled consumables are added at the end; "Reset Order" (or `/conso order reset`) goes back to the default order.
+- Dragging an icon outside arrange mode now moves the whole frame (like dragging its border) instead of doing nothing.
+
+## 1.4.1
+
+- Added **Brilliant Mana Oil** (item 20748) and **Brilliant Wizard Oil** (item 20749) to the weapon enchants. Both IDs are confirmed by the OctoWoW item database (octowow.st/db), AtlasLoot and pfQuest. (1.1.0 had removed them believing they did not exist on this server; they do.)
+- Fixed Dreamtonic lighting up when you used another consumable. Its aura icon (INV_Potion_30) is the same as Spirit of Zanza's, and the icon was compared. Dreamtonic is now recognised only by its aura name ("Dreamtonic", spell 45489 in the OctoWoW database), through the new `nameOnly` flag. Use `/conso debug` while the buff is on if it ever fails to light up: it lists the exact aura names.
+
 ## 1.4.0
 
 - Added "Show only in raid": the tracker only appears while you're in a raid group (settings checkbox).

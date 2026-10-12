@@ -4,7 +4,7 @@
 ConsoHelper = {}
 local CH = ConsoHelper
 
-local ADDON_VERSION = "1.4.0"
+local ADDON_VERSION = "1.5.0"
 
 -- ============================================================================
 -- SETTINGS
@@ -313,6 +313,12 @@ local function RefreshActiveAuras()
 end
 
 local function AuraTextureMatches(entry, resolvedIcon)
+  -- nameOnly: the icon of this buff is shared with other consumables (Dreamtonic / Spirit of Zanza) -> trust the aura NAME only
+  if entry.nameOnly then
+    if activeAuraNames[string.lower(entry.name)] then return true end
+    if entry.buffName and activeAuraNames[string.lower(entry.buffName)] then return true end
+    return false
+  end
   if activeAuraTextures[string.lower(resolvedIcon)] then return true end
   if entry.buffIcon and activeAuraTextures[string.lower(entry.buffIcon)] then return true end
   if entry.raidbuffIcon and activeAuraTextures[string.lower(entry.raidbuffIcon)] then return true end
@@ -473,6 +479,10 @@ SlashCmdList["CONSOHELPER"] = function(msg)
     ConsoHelper_UI.ToggleResetConfirm()
   elseif msg == "debug" then
     PrintDebug()
+  elseif msg == "order" or msg == "arrange" then
+    ConsoHelper_UI.ToggleArrange()
+  elseif msg == "order reset" or msg == "arrange reset" then
+    ConsoHelper_UI.ResetOrder()
   else
     ConsoHelper_UI.ToggleSelection()
   end

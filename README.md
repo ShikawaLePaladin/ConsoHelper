@@ -16,6 +16,7 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 - **Minimap button** — left-click to open buff selection, right-click for settings, draggable around the minimap.
 - **Combat-aware** — optionally pause updates or hide the frame entirely while in combat.
 - **Raid-only mode** — optionally show the tracker only while you're in a raid group.
+- **Custom icon order** — drag each consumable to the position you want (arrange mode), saved per character.
 - **Alert-only mode** — optionally hide healthy/active icons entirely and only show what's missing or about to expire, for a minimal always-on-screen alert view.
 
 ## Installation
@@ -32,6 +33,7 @@ Conso Helper watches your active buffs and consumables, tells you at a glance wh
 | `/conso config` | Open the settings panel |
 | `/conso shop` | Open the shopping list |
 | `/conso reset` | Reset all settings and selections to default |
+| `/conso order` | Arrange mode: drag the icons to reorder them, click Done to finish (`/conso order reset` restores the default order) |
 | `/conso debug` | Print currently active buff names/textures and the detection status of every tracked item, for diagnosing detection issues |
 
 The minimap button gives the same access: left-click opens selection, right-click opens settings.

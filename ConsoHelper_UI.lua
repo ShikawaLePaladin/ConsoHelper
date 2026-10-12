@@ -54,12 +54,34 @@ end
 local statusFrame
 local statusIcons = {}
 local selectionFrame
+local arranging = false   -- "arrange" mode: icons can be dragged to a new position (clicks do nothing)
+local dropMark
 
+-- Enabled entries in the player's own order (ConsoHelper_Settings.order = list of unique keys),
+-- then any enabled entry not in that list (newly enabled) in database order.
 local function GetEnabledEntries()
-  local list = {}
+  local byKey = {}
   for _, entry in ipairs(ConsoHelper_Data.buffs) do
     if not entry.header and CH.IsEnabled(entry) then
-      table.insert(list, entry)
+      byKey[CH.UniqueKey(entry)] = entry
+    end
+  end
+  local list, used = {}, {}
+  local order = ConsoHelper_Settings and ConsoHelper_Settings.order
+  if order then
+    for i = 1, table.getn(order) do
+      local k = order[i]
+      if byKey[k] and not used[k] then
+        table.insert(list, byKey[k])
+        used[k] = true
+      end
+    end
+  end
+  for _, entry in ipairs(ConsoHelper_Data.buffs) do
+    local k = CH.UniqueKey(entry)
+    if byKey[k] and not used[k] then
+      table.insert(list, byKey[k])
+      used[k] = true
     end
   end
   return list
@@ -135,12 +157,24 @@ local function CreateStatusIcon(entry)
     UI.OnHoverLeave()
   end)
   btn:SetScript("OnClick", function()
+    if arranging then return end   -- arranging: never use an item by accident
     if btn.entry.kind == "enchant" then
       CH.ApplyEnchant(btn.entry)
     elseif btn.entry.kind == "item" then
       CH.UseItem(btn.entry)
     end
   end)
+
+  -- drag: reorder in arrange mode, otherwise it moves the whole frame like dragging its border
+  btn:RegisterForDrag("LeftButton")
+  btn:SetScript("OnDragStart", function() UI.ArrangeDragStart(btn) end)
+  btn:SetScript("OnDragStop", function() UI.ArrangeDragStop(btn) end)
+
+  btn.arrangeMark = btn:CreateTexture(nil, "OVERLAY")
+  btn.arrangeMark:SetTexture("Interface\\Buttons\\WHITE8X8")
+  btn.arrangeMark:SetVertexColor(0.3, 0.8, 1, 0.22)
+  btn.arrangeMark:SetAllPoints(btn)
+  if arranging then btn.arrangeMark:Show() else btn.arrangeMark:Hide() end
 
   return btn
 end
@@ -219,7 +253,7 @@ function UI.UpdateStatus()
       btn.countText:SetText(count > 0 and count or "")
     end
 
-    if S.showOnlyWhenLow then
+    if S.showOnlyWhenLow and not arranging then
       local healthy = active and not warning and not critical
       if healthy then btn:Hide() else btn:Show() end
     elseif not btn:IsShown() then
@@ -227,7 +261,7 @@ function UI.UpdateStatus()
     end
   end
 
-  if S.showOnlyWhenLow then
+  if S.showOnlyWhenLow and not arranging then
     LayoutStatusFrame()
   end
 end
@@ -244,7 +278,7 @@ glowTicker:SetScript("OnUpdate", function()
 end)
 
 function UI.UpdateFrameVisibility()
-  if not statusFrame then return end
+  if not statusFrame or arranging then return end
   local S = ConsoHelper_Settings.settings
   local shouldHide = (S.hideFrameInCombat and S.inCombat) or (S.raidOnly and not S.inRaid)
   if shouldHide then
@@ -276,7 +310,7 @@ end
 local hoverTicker = CreateFrame("Frame")
 hoverTicker:SetScript("OnUpdate", function()
   if not statusFrame or not ConsoHelper_Settings then return end
-  if ConsoHelper_Settings.settings.hoverToShow and hoverHideAt and hoverCount == 0 then
+  if ConsoHelper_Settings.settings.hoverToShow and hoverHideAt and hoverCount == 0 and not arranging then
     if GetTime() >= hoverHideAt then
       statusFrame:SetAlpha(0)
       hoverHideAt = nil
@@ -311,6 +345,14 @@ local function CreateStatusFrame()
   statusFrame.title:SetPoint("TOPLEFT", statusFrame, "TOPLEFT", 4, -3)
   statusFrame.title:SetText("Conso Helper")
 
+  statusFrame.doneBtn = CreateFrame("Button", nil, statusFrame, "UIPanelButtonTemplate")
+  statusFrame.doneBtn:SetWidth(44)
+  statusFrame.doneBtn:SetHeight(16)
+  statusFrame.doneBtn:SetPoint("TOPRIGHT", statusFrame, "TOPRIGHT", -3, -2)
+  statusFrame.doneBtn:SetText("Done")
+  statusFrame.doneBtn:SetScript("OnClick", function() UI.SetArrange(false) end)
+  statusFrame.doneBtn:Hide()
+
   local pos = ConsoHelper_Settings.settings.framePosition
   statusFrame:SetPoint(pos.point, UIParent, pos.relativePoint, pos.x, pos.y)
 
@@ -338,6 +380,151 @@ function UI.ApplyFrameLockVisuals()
     statusFrame:SetAlpha(1)
   end
 end
+
+-- ============================================================================
+-- ARRANGE MODE: put each consumable where you want it
+-- ============================================================================
+
+-- grid cell under the mouse (1 = first position); also returns the cursor in the status frame's own units
+local function CellFromCursor()
+  local S = ConsoHelper_Settings.settings
+  local cx, cy = GetCursorPosition()
+  local es = statusFrame:GetEffectiveScale()
+  if type(es) ~= "number" or es <= 0 then es = 1 end
+  local left, top = statusFrame:GetLeft(), statusFrame:GetTop()
+  if type(left) ~= "number" or type(top) ~= "number" then return 1, 0, 0 end
+  local lx = cx / es - left
+  local ly = top - cy / es
+  local step = S.iconSize + S.iconSpacing
+  local perRow = math.max(1, S.iconsPerRow)
+  local n = table.getn(statusIcons)
+  local col = math.floor((lx - S.iconSpacing) / step)
+  local row = math.floor((ly - 18) / step)
+  if col < 0 then col = 0 end
+  if col > perRow - 1 then col = perRow - 1 end
+  if row < 0 then row = 0 end
+  local idx = row * perRow + col + 1
+  if idx > n then idx = n end
+  if idx < 1 then idx = 1 end
+  return idx, lx, ly
+end
+
+local function HideDropMark()
+  if dropMark then dropMark:Hide() end
+end
+
+local function ShowDropMark(idx)
+  local S = ConsoHelper_Settings.settings
+  if not dropMark then
+    dropMark = statusFrame:CreateTexture(nil, "ARTWORK")
+    dropMark:SetTexture("Interface\\Buttons\\WHITE8X8")
+    dropMark:SetVertexColor(0.3, 0.8, 1, 0.45)
+  end
+  local perRow = math.max(1, S.iconsPerRow)
+  local step = S.iconSize + S.iconSpacing
+  local col = math.mod(idx - 1, perRow)
+  local row = math.floor((idx - 1) / perRow)
+  dropMark:ClearAllPoints()
+  dropMark:SetWidth(S.iconSize)
+  dropMark:SetHeight(S.iconSize)
+  dropMark:SetPoint("TOPLEFT", statusFrame, "TOPLEFT", S.iconSpacing + col * step, -18 - row * step)
+  dropMark:Show()
+end
+
+-- keys of the icons as currently shown, in order (also handy for tests)
+function UI.GetOrder()
+  local keys = {}
+  for _, btn in ipairs(statusIcons) do table.insert(keys, CH.UniqueKey(btn.entry)) end
+  return keys
+end
+
+function UI.GetIcons() return statusIcons end
+
+-- put the consumable with this key at position toIndex (1 = first), shifting the others
+function UI.MoveEntry(key, toIndex)
+  local keys = {}
+  for _, e in ipairs(GetEnabledEntries()) do
+    local k = CH.UniqueKey(e)
+    if k ~= key then table.insert(keys, k) end
+  end
+  if toIndex < 1 then toIndex = 1 end
+  if toIndex > table.getn(keys) + 1 then toIndex = table.getn(keys) + 1 end
+  table.insert(keys, toIndex, key)
+  ConsoHelper_Settings.order = keys
+  RebuildStatusFrame()
+end
+
+function UI.ResetOrder()
+  ConsoHelper_Settings.order = nil
+  if statusFrame then RebuildStatusFrame() end
+  DEFAULT_CHAT_FRAME:AddMessage("|cff00FF00Conso Helper:|r Icon order reset to the default order.")
+end
+
+function UI.ArrangeDragStart(btn)
+  if not arranging then
+    -- not arranging: dragging an icon moves the frame, like dragging its border
+    local f = statusFrame:GetScript("OnDragStart")
+    if f then f() end
+    return
+  end
+  btn.dragging = true
+  GameTooltip:Hide()
+  btn:SetFrameLevel(statusFrame:GetFrameLevel() + 12)
+  btn:SetScript("OnUpdate", function()
+    local idx, lx, ly = CellFromCursor()
+    this:ClearAllPoints()
+    this:SetPoint("CENTER", statusFrame, "TOPLEFT", lx, -ly)
+    ShowDropMark(idx)
+  end)
+end
+
+function UI.ArrangeDragStop(btn)
+  if not arranging then
+    local f = statusFrame:GetScript("OnDragStop")
+    if f then f() end
+    return
+  end
+  btn:SetScript("OnUpdate", nil)
+  if not btn.dragging then return end
+  btn.dragging = false
+  local idx = CellFromCursor()
+  HideDropMark()
+  UI.MoveEntry(CH.UniqueKey(btn.entry), idx)
+end
+
+function UI.SetArrange(on)
+  if not statusFrame then return end
+  arranging = on and true or false
+  for _, btn in ipairs(statusIcons) do
+    if arranging then
+      btn:Show()
+      btn.arrangeMark:Show()
+    else
+      btn.arrangeMark:Hide()
+      btn:SetScript("OnUpdate", nil)
+      btn.dragging = false
+    end
+  end
+  if arranging then
+    statusFrame:Show()
+    statusFrame:SetAlpha(1)
+    statusFrame.title:SetText("Drag to reorder")
+    statusFrame.title:Show()
+    statusFrame.doneBtn:Show()
+    DEFAULT_CHAT_FRAME:AddMessage("|cff00CCFFConso Helper:|r arrange mode - drag the icons where you want them, then click Done (or /conso order).")
+  else
+    HideDropMark()
+    statusFrame.doneBtn:Hide()
+    statusFrame.title:SetText("Conso Helper")
+    UI.ApplyFrameLockVisuals()
+    UI.UpdateFrameVisibility()
+  end
+  LayoutStatusFrame()
+  UI.UpdateStatus()
+end
+
+function UI.ToggleArrange() UI.SetArrange(not arranging) end
+function UI.IsArranging() return arranging end
 
 -- ============================================================================
 -- BUFF SELECTION WINDOW (compact icon grid, replaces the old giant checklist)
@@ -765,6 +952,20 @@ local function CreateSettingsFrame()
       end
     end)
   rightY = ny
+
+  local arrangeBtn = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
+  arrangeBtn:SetWidth(150)
+  arrangeBtn:SetHeight(24)
+  arrangeBtn:SetPoint("BOTTOMLEFT", settingsFrame, "BOTTOMLEFT", 14, 70)
+  arrangeBtn:SetText("Arrange Icons...")
+  arrangeBtn:SetScript("OnClick", function() settingsFrame:Hide(); UI.SetArrange(true) end)
+
+  local orderBtn = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
+  orderBtn:SetWidth(150)
+  orderBtn:SetHeight(24)
+  orderBtn:SetPoint("LEFT", arrangeBtn, "RIGHT", 6, 0)
+  orderBtn:SetText("Reset Order")
+  orderBtn:SetScript("OnClick", function() UI.ResetOrder() end)
 
   local selectBtn = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
   selectBtn:SetWidth(150)
