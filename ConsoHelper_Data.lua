@@ -77,10 +77,12 @@ ConsoHelper_Data.buffs = {
   { cat = "battle", kind = "item", name = "Elixir of Greater Frost Power",  itemID = 55046, duration = 3600 },
   { cat = "battle", kind = "item", name = "Elixir of Greater Arcane Power", itemID = 55048, duration = 3600 },
   { cat = "battle", kind = "item", name = "Dreamshard Elixir",              itemID = 61224, duration = 3600 },
+  { cat = "battle", kind = "item", name = "Blackroot Brew",                 itemID = 42014, duration = 1200 },
 
   -- ===================== GUARDIAN ELIXIRS (defense) =====================
   { cat = "guardian", kind = "item", name = "Elixir of Superior Defense",   itemID = 13445, duration = 3600, buffIcon = "Interface\\Icons\\INV_Potion_86" },
   { cat = "guardian", kind = "item", name = "Elixir of Greater Defense",    itemID = 8951,  duration = 3600 },
+  { cat = "guardian", kind = "item", name = "Elixir of Fortitude",         itemID = 3825,  duration = 3600 },
   { cat = "guardian", kind = "item", name = "Bloodkelp Elixir of Resistance", itemID = 22193, duration = 1800 },
   { cat = "guardian", kind = "item", name = "Bloodkelp Elixir of Dodging",  itemID = 22192, duration = 1800 },
 
