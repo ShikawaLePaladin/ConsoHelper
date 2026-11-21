@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0
+
+- Synced the tracked consumables with the guild's official list on octofan.vercel.app/conso (Supabase `conso_prices`, 46 entries). **15 new entries**: Arcane Elixir, Elixir of the Sages, Magic Resistance Potion, Lung Juice Cocktail, Gizzard Gum, Oil of Immolation, Mighty Troll's Blood Potion, Heavy Runecloth Bandage, Scroll of Protection IV, Scroll of Strength IV, Scroll of Agility III, Smoked Sagefish, Superior Mana Potion, Major Mana Potion, Major Healing Potion. All item IDs verified against pfQuest's local database (calibrated on four items already tracked) and the OctoWoW item DB (octowow.st/db). Durations match this server, not vanilla (e.g. 1-hour protection potions). Entries whose aura name is translated on the FR server carry a `buffName` with the French aura name (Parchemin de..., Potion de..., Élixir Arcane/des Sages) so detection survives the FR transition; texture matching (locale-independent) stays first.
+- New **"Concoctions" category** (Arcane Giant / Dreamwater / Emerald Mongoose), placed between Special Potions and Juju. It previously sat inside the Battle Elixirs block, which split that section in two in the Select window.
+- Fixed Concoction of the Arcane Giant (item 27412 -> **47412**) and Concoction of the Dreamwater (27414 -> **47414**): the wrong IDs kept their icons stuck on the "?" placeholder. Confirmed on octowow.st/db, which links Arcane Giant to spell 36931 - the same spell ID the guild site tracks.
+- Fixed a possible `SetPoint` error at startup when the saved frame position is missing or corrupted: the position is now validated (table + string fields, numeric x/y) and falls back to the default CENTER/0/32.
+
 ## 1.5.0
 
 - **Arrange your icons**: put each consumable exactly where you want it. Settings > "Arrange Icons..." (or `/conso order`) switches the tracker to arrange mode: drag an icon onto any position - a blue square shows where it will land and the others shift - then click **Done**. Clicking an icon does nothing in this mode, so you can't use an item by accident, and every icon is shown even in "only when missing" mode. The order is saved per character.

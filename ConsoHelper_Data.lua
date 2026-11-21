@@ -6,7 +6,7 @@
 ConsoHelper_Data = {}
 
 ConsoHelper_Data.categoryOrder = {
-  "class", "flask", "battle", "guardian", "protection", "special",
+  "class", "flask", "battle", "guardian", "protection", "special", "concoction",
   "juju", "food", "alcohol", "combat", "enchant",
 }
 
@@ -17,6 +17,7 @@ ConsoHelper_Data.categoryLabels = {
   guardian   = "Guardian Elixirs",
   protection = "Protection Potions",
   special    = "Special Potions & Consumables",
+  concoction = "Concoctions",
   juju       = "Juju & Tribal",
   food       = "Food & Drinks",
   alcohol    = "Alcoholic Beverages",
@@ -78,6 +79,8 @@ ConsoHelper_Data.buffs = {
   { cat = "battle", kind = "item", name = "Elixir of Greater Arcane Power", itemID = 55048, duration = 3600 },
   { cat = "battle", kind = "item", name = "Dreamshard Elixir",              itemID = 61224, duration = 3600 },
   { cat = "battle", kind = "item", name = "Blackroot Brew",                 itemID = 42014, duration = 1200 },
+  { cat = "battle", kind = "item", name = "Arcane Elixir",                  itemID = 9155, duration = 1800, buffName = "Élixir Arcane" },
+  { cat = "battle", kind = "item", name = "Elixir of the Sages",            itemID = 13447, duration = 3600, buffName = "Élixir des Sages" },
 
   -- ===================== GUARDIAN ELIXIRS (defense) =====================
   { cat = "guardian", kind = "item", name = "Elixir of Superior Defense",   itemID = 13445, duration = 3600, buffIcon = "Interface\\Icons\\INV_Potion_86" },
@@ -98,6 +101,7 @@ ConsoHelper_Data.buffs = {
   { cat = "protection", kind = "item", name = "Nature Protection Potion",         itemID = 6052,  duration = 3600 },
   { cat = "protection", kind = "item", name = "Greater Nature Protection Potion", itemID = 13458, duration = 3600 },
   { cat = "protection", kind = "item", name = "Greater Arcane Protection Potion", itemID = 13461, duration = 3600 },
+  { cat = "protection", kind = "item", name = "Magic Resistance Potion",          itemID = 9036, duration = 180 },
 
   -- ===================== SPECIAL POTIONS & CONSUMABLES =====================
   { cat = "special", kind = "item", name = "Mageblood Potion",           itemID = 20007, duration = 3600 },
@@ -108,6 +112,19 @@ ConsoHelper_Data.buffs = {
   { cat = "special", kind = "item", name = "R.O.I.D.S.",                 itemID = 8410,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Strength", buffName = "Rage of Ages" },
   { cat = "special", kind = "item", name = "Cerebral Cortex Compound",   itemID = 8423,  duration = 3600, buffIcon = "Interface\\Icons\\Spell_Nature_Purge", buffName = "Infallible Mind" },
   { cat = "special", kind = "item", name = "Dreamtonic",                 itemID = 61423, duration = 1200, nameOnly = true },
+  { cat = "special", kind = "item", name = "Lung Juice Cocktail",        itemID = 8411, duration = 3600, buffName = "Cocktail Jus de Poumon" },
+  { cat = "special", kind = "item", name = "Gizzard Gum",                itemID = 8424, duration = 3600 },
+  { cat = "special", kind = "item", name = "Oil of Immolation",          itemID = 8956, duration = 60, buffIcon = "Interface\\Icons\\Spell_Fire_Immolation" },
+  { cat = "special", kind = "item", name = "Mighty Troll's Blood Potion", itemID = 3826, duration = 3600 },
+  { cat = "special", kind = "item", name = "Heavy Runecloth Bandage",    itemID = 14530 },
+  { cat = "special", kind = "item", name = "Scroll of Protection IV",    itemID = 10305, duration = 1800, buffName = "Parchemin de Protection IV" },
+  { cat = "special", kind = "item", name = "Scroll of Strength IV",      itemID = 10310, duration = 1800, buffName = "Parchemin de Force IV" },
+  { cat = "special", kind = "item", name = "Scroll of Agility III",      itemID = 4425, duration = 1800, buffName = "Parchemin d'Agilité III" },
+
+  -- ===================== CONCOCTIONS (custom OctoWoW) =====================
+  { cat = "concoction", kind = "item", name = "Concoction of the Arcane Giant",  itemID = 47412, duration = 3600 },
+  { cat = "concoction", kind = "item", name = "Concoction of the Dreamwater",    itemID = 47414, duration = 1200 },
+  { cat = "concoction", kind = "item", name = "Concoction of the Emerald Mongoose", itemID = 47410, duration = 3600 },
 
   -- ===================== JUJU & TRIBAL =====================
   { cat = "juju", kind = "item", name = "Juju Might",  itemID = 12460, duration = 1800 },
@@ -144,6 +161,7 @@ ConsoHelper_Data.buffs = {
   { cat = "food", kind = "item", name = "Sagefish Delight",                itemID = 21217, duration = 900 },
   { cat = "food", kind = "item", name = "Hearty Country Pumpkin",          itemID = 51713, duration = 900 },
   { cat = "food", kind = "item", name = "Tender Wolf Steak",               itemID = 18045, duration = 900 },
+  { cat = "food", kind = "item", name = "Smoked Sagefish",                 itemID = 21072 },
 
   -- ===================== ALCOHOLIC BEVERAGES =====================
   { cat = "alcohol", kind = "item", name = "Rumsey Rum Black Label",  itemID = 21151, duration = 900 },
@@ -160,6 +178,9 @@ ConsoHelper_Data.buffs = {
   { cat = "combat", kind = "item", name = "Rage Potion",          itemID = 5631 },
   { cat = "combat", kind = "item", name = "Great Rage Potion",    itemID = 5633 },
   { cat = "combat", kind = "item", name = "Free Action Potion",   itemID = 5634 },
+  { cat = "combat", kind = "item", name = "Superior Mana Potion", itemID = 13443, buffName = "Potion de Mana Supérieure" },
+  { cat = "combat", kind = "item", name = "Major Mana Potion",    itemID = 13444, buffName = "Potion de Mana Majeure" },
+  { cat = "combat", kind = "item", name = "Major Healing Potion", itemID = 13446, buffName = "Potion de Soin Majeure" },
 
   -- ===================== WEAPON ENCHANTS =====================
   { cat = "enchant", kind = "enchant", name = "Dense Sharpening Stone",     itemID = 12404, slot = "mainhand" },

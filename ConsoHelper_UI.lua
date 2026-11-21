@@ -353,8 +353,15 @@ local function CreateStatusFrame()
   statusFrame.doneBtn:SetScript("OnClick", function() UI.SetArrange(false) end)
   statusFrame.doneBtn:Hide()
 
+  -- FIX 2026-11-19 : framePosition peut etre nil/incomplet (premier boot, merge tardif, settings corrompus)
+  -- -> valeurs par defaut + validation ; jamais d erreur SetPoint bloquante.
   local pos = ConsoHelper_Settings.settings.framePosition
-  statusFrame:SetPoint(pos.point, UIParent, pos.relativePoint, pos.x, pos.y)
+  if type(pos) ~= "table" or type(pos.point) ~= "string" or type(pos.relativePoint) ~= "string" then
+    pos = { point = "CENTER", relativeTo = "UIParent", relativePoint = "CENTER", x = 0, y = 32 }
+    ConsoHelper_Settings.settings.framePosition = pos
+  end
+  local px, py = tonumber(pos.x) or 0, tonumber(pos.y) or 0
+  statusFrame:SetPoint(pos.point, UIParent, pos.relativePoint, px, py)
 
   UI.ApplyFrameLockVisuals()
 end
